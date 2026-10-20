@@ -22,11 +22,16 @@ eval "$(aws configure export-credentials --format env)"
 response=$(mktemp)
 trap 'rm -f "$response"' EXIT
 
+# Build curl args as an array so the session-token header stays a single argument.
+# (In zsh, ${VAR:+--header "..."} splits on spaces and breaks curl's option parsing.)
+auth_args=(--aws-sigv4 "aws:amz:us-east-1:codewhisperer" --user "${AWS_ACCESS_KEY_ID}:${AWS_SECRET_ACCESS_KEY}")
+if [[ -n ${AWS_SESSION_TOKEN:-} ]]; then
+  auth_args+=(--header "x-amz-security-token: ${AWS_SESSION_TOKEN}")
+fi
+
 http_code=$(curl https://management.us-east-1.kiro.dev/ \
   --silent --show-error \
-  --aws-sigv4 "aws:amz:us-east-1:codewhisperer" \
-  --user "${AWS_ACCESS_KEY_ID}:${AWS_SECRET_ACCESS_KEY}" \
-  ${AWS_SESSION_TOKEN:+--header "x-amz-security-token: ${AWS_SESSION_TOKEN}"} \
+  "${auth_args[@]}" \
   --header "content-type: application/x-amz-json-1.0" \
   --header "x-amz-target: KiroControlPlaneService.${operation}" \
   --data "@${payload}" \
