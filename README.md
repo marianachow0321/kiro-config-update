@@ -14,7 +14,7 @@ carry everything. Key gotcha: `ListProfiles` returns the full profile — includ
 ## Quick Start
 
 ```zsh
-git clone git@github.com:marianachow0321/kiro-config-update.git
+git clone https://github.com/marianachow0321/kiro-config-update.git
 cd kiro-config-update
 
 ./kiro-profile-api.sh ListProfiles list-profiles.json    # 1. save complete profile to snapshots/
