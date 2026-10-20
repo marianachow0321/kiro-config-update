@@ -1,0 +1,10 @@
+# Profile dumps (account ID, Identity Center and profile ARNs)
+backups/
+snapshots/
+
+# Generated payloads — contain real SSO/OIDC ARNs + S3 bucket from the live profile.
+# build-update-payload.sh writes new-update.json; *-update.json also covers any
+# ad-hoc payload built by hand during testing.
+new-update.json
+*-update.json
+tmp.json
